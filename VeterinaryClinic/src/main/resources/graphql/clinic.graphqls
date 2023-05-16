@@ -1,0 +1,65 @@
+type Query {
+    pets: [Pet]
+    pet(id:Int): Pet
+    petTypes: [PetType]
+
+    visits: [Visit]
+    owners: [Owner]
+
+    vets: [Vet!]!
+    vet(id: Int!): Vet
+
+    people: [Person]
+}
+
+type PetType {
+    id:Int!
+    name:String
+}
+
+type Pet {
+    id:Int!
+    name:String
+    type:PetType
+    visits:[Visit]
+    owner:Owner
+}
+
+type Visit {
+    id:Int!
+    description:String
+    pet:Pet
+}
+
+type Specialty {
+    id: Int!
+    name: String!
+}
+
+interface Person {
+    id: Int!
+    firstName: String!
+    lastName: String
+}
+
+type Owner implements Person {
+    id: Int!
+    firstName: String!
+    lastName: String
+    address: String!
+    city: String!
+
+    # a list of pets this owner owns
+    pets: [Pet!]!
+}
+
+type Vet implements Person {
+    id: Int!
+    firstName: String!
+    lastName: String
+
+    # what is this vet specialized in, uses EAGER fetching, no need of @SchemaMapping
+    specialties: [Specialty!]!
+
+    visits: [Visit!]!
+}
